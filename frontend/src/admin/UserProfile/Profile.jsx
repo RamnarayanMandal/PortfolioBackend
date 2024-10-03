@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import CreateProfile from './CreateProfile';
 import { FaMessage } from "react-icons/fa6";
 import RightDrawer from '../contact/RightDrawer';
+import Swal from 'sweetalert2';
+
 
 export const Profile = () => {
     const [userProfile, setUserProfile] = useState(null);
@@ -80,15 +82,36 @@ export const Profile = () => {
         }
     };
 
-    const handleImageUpload = () => {
+    const handleImageUpload = async () => {
         if (!selectedImage) return;
-
+    
         const formData = new FormData();
         formData.append('image', selectedImage);
-
-        // Call API to upload the image here...
-        console.log("Image uploaded!");
+    
+        try {
+            const response = await axios.put(`${URI}/api/users/update/${userProfile._id}`, formData);
+            console.log('Response from server:', response.data);
+    
+            // Show success message using SweetAlert2
+            Swal.fire({
+                icon: 'success',
+                title: 'Profile updated successfully!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setShowModalUpdate(false);
+        } catch (error) {
+            console.error('Error updating profile:', error);
+    
+            // Show error message using SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'There was an error updating the profile.',
+            });
+        }
     };
+    
 
     // Display loader while fetching user profile
     if (!userProfile) return (

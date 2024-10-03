@@ -5,9 +5,10 @@ import authMiddleware from "../middleware/authMiddleware.js"
 
 const router = express.Router();
 
+
 router.post(
-    '/create',
-    upload.fields([{ name: 'image', maxCount: 1 }]), // Use maxCount of 1 for a single file
+    '/signup',
+   
     createUser
 );
 

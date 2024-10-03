@@ -1,11 +1,11 @@
-import {v2 as cloudinary} from "cloudinary"
+import { v2 as cloudinary } from "cloudinary"
 import fs from "fs"
 
-          
-cloudinary.config({ 
-  cloud_name: 'dpxo55dbc', 
-  api_key: '698239919572654', 
-  api_secret: 'qF5DmPwkKSsfOGcNMfy53Wv752c' 
+
+cloudinary.config({
+    cloud_name: process.env.cloud_name,
+    api_key: process.env.api_key,
+    api_secret: process.env.api_secret
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
@@ -28,4 +28,4 @@ const uploadOnCloudinary = async (localFilePath) => {
 
 
 
- export default uploadOnCloudinary
+export default uploadOnCloudinary

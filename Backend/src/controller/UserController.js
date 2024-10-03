@@ -9,6 +9,9 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+
+
 export const createUser = async (req, res) => {
   try {
       //console.log("req.body: ", req.body); // Log request body fields
@@ -20,27 +23,12 @@ export const createUser = async (req, res) => {
           return res.status(400).json({ message: 'User with this email already exists.' });
       }
 
-      let imageLocalPath = null;
-      if (req.files && req.files.image && req.files.image.length > 0) {
-          imageLocalPath = req.files.image[0].path;
-      }
-
-      
-
-      if (!imageLocalPath) {
-          return res.status(400).send("Image file is required");
-      }
-
-      const image = await uploadOnCloudinary(imageLocalPath);
-      
-
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = new User({
           name,
           email,
           password: hashedPassword,
-          image: image.url,
           phoneNo,
           title,
           address,
@@ -75,20 +63,20 @@ export const loginUser = async (req, res) => {
         // Find user by email
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid email or password (user not found)' });
         }
 
         // Compare the provided password with the hashed password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ message: 'Invalid email or password (password mismatch)' });
         }
 
-        // Generate a JWT token or session here (optional)
-        // For simplicity, we are just returning a success message
-        const token = user.createJWT()
+        // Generate a JWT token or session here
+        const token = user.createJWT();
         res.status(200).json({
-            message: 'Login successful!',token,
+            message: 'Login successful!',
+            token,
             user: {
                 id: user._id,
                 name: user.name,
@@ -101,9 +89,11 @@ export const loginUser = async (req, res) => {
             }
         });
     } catch (err) {
+        console.error('Error during login:', err);
         res.status(500).json({ message: 'Error logging in', error: err.message });
     }
 };
+
 
 
 export const getUserById = async (req, res) => {

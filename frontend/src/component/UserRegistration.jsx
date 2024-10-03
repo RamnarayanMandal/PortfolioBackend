@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import './UserRegistration.css'; // Ensure you import the updated CSS file
+import React, { useState } from 'react';
+import './UserRegistration.css';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const UserRegistration = () => {
   const [activeForm, setActiveForm] = useState('login');
@@ -9,11 +10,9 @@ const UserRegistration = () => {
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  const nagivate = useNavigate()
-
-   const BASE_URL = import.meta.env.VITE_API_URL;
-
-
+  const navigate = useNavigate();
+  
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -29,17 +28,35 @@ const UserRegistration = () => {
         }),
       });
       const data = await response.json();
-      // Handle the response data
-      console.log(data);
-      localStorage.setItem("token",data.token)
-      localStorage.setItem("userId",data.user.id)
-      localStorage.setItem("email",data.user.email)
 
-      
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('email', data.user.email);
 
-      nagivate("/admin-dashboard")
+        // SweetAlert2 success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Successful',
+          text: 'You have successfully logged in!',
+        });
+
+        navigate('/admin-dashboard');
+      } else {
+        // SweetAlert2 error alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: data.message || 'Invalid login credentials!',
+        });
+      }
     } catch (error) {
       console.error('Error during login:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred during login. Please try again later.',
+      });
     }
   };
 
@@ -58,119 +75,121 @@ const UserRegistration = () => {
         }),
       });
       const data = await response.json();
-      // Handle the response data
-      console.log(data);
+
+      if (response.ok) {
+        // SweetAlert2 success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'Sign Up Successful',
+          text: 'You have successfully signed up!',
+        });
+        setActiveForm('login'); // Switch to login form after sign-up
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Sign Up Failed',
+          text: data.message || 'There was a problem with the registration.',
+        });
+      }
     } catch (error) {
-      console.error('Error during sign up:', error);
+      console.error('Error during sign-up:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred during sign-up. Please try again later.',
+      });
     }
   };
 
   return (
-    <div className="flex justify-center content-center items-center mt-40 ">
-      <section className="flex justify-center content-center items-center ">
-      {/* <h1 className="section-title ">Animated Forms</h1> */}
-      <div className="forms">
-        {/* Login Form */}
-        <div
-          className={`form-wrapper ${activeForm === 'login' ? 'is-active' : ''}`}
-        >
-          <button
-            type="button"
-            className={`switcher switcher-login `}
-            onClick={() => setActiveForm('login')}
-          >
-            Login
-            <span className="underline"></span>
-          </button>
-          <form className="form form-login" onSubmit={handleLoginSubmit}>
-            <fieldset>
-              <legend>Please, enter your email and password for login.</legend>
-              <div className="input-block">
-                <label htmlFor="login-email">E-mail</label>
-                <input
-                  id="login-email"
-                  type="email"
-                  required
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                />
-              </div>
-              <div className="input-block">
-                <label htmlFor="login-password">Password</label>
-                <input
-                  id="login-password"
-                  type="password"
-                  required
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                />
-              </div>
-            </fieldset>
+    <div className="flex justify-center content-center items-center mt-40">
+      <section className="flex justify-center content-center items-center">
+        <div className="forms">
+          <div className={`form-wrapper ${activeForm === 'login' ? 'is-active' : ''}`}>
             <button
-              type="submit"
-              className="btn-login"
+              type="button"
+              className="switcher switcher-login"
+              onClick={() => setActiveForm('login')}
             >
-              Log In
+              Login
+              <span className="underline"></span>
             </button>
-          </form>
-        </div>
+            <form className="form form-login" onSubmit={handleLoginSubmit}>
+              <fieldset>
+                <legend>Please, enter your email and password for login.</legend>
+                <div className="input-block">
+                  <label htmlFor="login-email">E-mail</label>
+                  <input
+                    id="login-email"
+                    type="email"
+                    required
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                  />
+                </div>
+                <div className="input-block">
+                  <label htmlFor="login-password">Password</label>
+                  <input
+                    id="login-password"
+                    type="password"
+                    required
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                  />
+                </div>
+              </fieldset>
+              <button type="submit" className="btn-login">Log In</button>
+            </form>
+          </div>
 
-        {/* Sign Up Form */}
-        <div
-          className={`form-wrapper ${activeForm === 'signup' ? 'is-active' : ''}`}
-        >
-          <button
-            type="button"
-            className={`switcher switcher-signup`}
-            onClick={() => setActiveForm('signup')}
-          >
-            Sign Up
-            <span className="underline"></span>
-          </button>
-          <form className="form form-signup" onSubmit={handleSignupSubmit}>
-            <fieldset>
-              <legend>Please, enter your details to sign up.</legend>
-              <div className="input-block">
-                <label htmlFor="signup-name">Name</label>
-                <input
-                  id="signup-name"
-                  type="text"
-                  required
-                  value={signupName}
-                  onChange={(e) => setSignupName(e.target.value)}
-                />
-              </div>
-              <div className="input-block">
-                <label htmlFor="signup-email">E-mail</label>
-                <input
-                  id="signup-email"
-                  type="email"
-                  required
-                  value={signupEmail}
-                  onChange={(e) => setSignupEmail(e.target.value)}
-                />
-              </div>
-              <div className="input-block">
-                <label htmlFor="signup-password">Password</label>
-                <input
-                  id="signup-password"
-                  type="password"
-                  required
-                  value={signupPassword}
-                  onChange={(e) => setSignupPassword(e.target.value)}
-                />
-              </div>
-            </fieldset>
+          <div className={`form-wrapper ${activeForm === 'signup' ? 'is-active' : ''}`}>
             <button
-              type="submit"
-              className="btn-signup"
+              type="button"
+              className="switcher switcher-signup"
+              onClick={() => setActiveForm('signup')}
             >
               Sign Up
+              <span className="underline"></span>
             </button>
-          </form>
+            <form className="form form-signup" onSubmit={handleSignupSubmit}>
+              <fieldset>
+                <legend>Please, enter your details to sign up.</legend>
+                <div className="input-block">
+                  <label htmlFor="signup-name">Name</label>
+                  <input
+                    id="signup-name"
+                    type="text"
+                    required
+                    value={signupName}
+                    onChange={(e) => setSignupName(e.target.value)}
+                  />
+                </div>
+                <div className="input-block">
+                  <label htmlFor="signup-email">E-mail</label>
+                  <input
+                    id="signup-email"
+                    type="email"
+                    required
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
+                  />
+                </div>
+                <div className="input-block">
+                  <label htmlFor="signup-password">Password</label>
+                  <input
+                    id="signup-password"
+                    type="password"
+                    required
+                    value={signupPassword}
+                    onChange={(e) => setSignupPassword(e.target.value)}
+                  />
+                </div>
+              </fieldset>
+              <button type="submit" className="btn-signup">Sign Up</button>
+            </form>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   );
 };
