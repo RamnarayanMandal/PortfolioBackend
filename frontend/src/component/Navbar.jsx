@@ -2,12 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../ThemeContext'; // Import useTheme
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logo, setLogo] = useState([]);
   const { isDarkMode, toggleTheme } = useTheme(); // Use theme context
   const URI = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate(); // Hook for programmatic navigation
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,6 +24,39 @@ export const Navbar = () => {
       console.log(resp.data);
     } catch (error) {
       console.error('Error fetching logo:', error);
+    }
+  };
+
+  const handleLogin = async () => {
+    const { value: credentials } = await Swal.fire({
+      title: 'Verify-admin',
+      html:
+        '<input id="password" type="password" class="swal2-input" placeholder="Enter screet Key">',
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Login',
+      cancelButtonText: 'Cancel',
+      preConfirm: () => {
+        const password = document.getElementById('password').value;
+        return {password };
+      }
+    });
+
+    if (credentials) {
+      const { password } = credentials;
+
+      // Static validation
+      if (password === '847230') {
+        
+        navigate('/login-ramnarayanMandal'); 
+      } else {
+        // Show error using SweetAlert2
+        await Swal.fire({
+          icon: 'error',
+          title: 'Your are not Admin',
+          text: 'Invalid your screet key.',
+        });
+      }
     }
   };
 
@@ -45,7 +82,6 @@ export const Navbar = () => {
           )}
         </a>
         
-       
         <div className={`lg:flex space-x-5 ${isMenuOpen ? 'flex-col lg:hidden' : 'hidden'}`}>
           <a href="#home" className="hover:text-gray-900">Home</a>
           <a href="#about" className="hover:text-gray-900">About</a>
@@ -54,7 +90,7 @@ export const Navbar = () => {
           <a href="#skills" className="hover:text-gray-900">Skills</a>
           <a href="#projects" className="hover:text-gray-900">Projects</a>
           <a href="#contact" className="hover:text-gray-900">Contact</a>
-          <a href="/login" className="hover:text-gray-900">Login</a>
+          <button onClick={handleLogin} className="hover:text-gray-900">Login</button>
         </div>
         
         <button onClick={toggleTheme} className="p-2">
@@ -79,7 +115,7 @@ export const Navbar = () => {
               <a href="#skills" className="hover:text-gray-900">Skills</a>
               <a href="#projects" className="hover:text-gray-900">Projects</a>
               <a href="#contact" className="hover:text-gray-900">Contact</a>
-              <a href="/login" className="hover:text-gray-900">Login</a>
+              <button onClick={handleLogin} className="hover:text-gray-900">Login</button>
             </div>
           </div>
         )}

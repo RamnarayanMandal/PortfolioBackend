@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate('/login-ramnarayanMandal');
   };
 
   const openModal = () => setIsModalOpen(true);

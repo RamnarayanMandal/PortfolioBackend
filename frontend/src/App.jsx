@@ -32,14 +32,14 @@ const MainContent = () => {
   const showSideBar = !(
     location.pathname === '/' || 
     location.pathname === '/about-project' || 
-    location.pathname === '/login'
+    location.pathname === '/login-ramnarayanMandal'
   );
 
   // Function to set background style based on the route
   const getBackgroundStyle = () => {
     switch (location.pathname) {
       case '/':
-      case '/login':
+      case '/login-ramnarayanMandal':
       case '/skill':
       case '/admin-dashboard':
       case '/contactMe':
@@ -72,7 +72,7 @@ const MainContent = () => {
       {showSideBar && <Sidebar />}
       <Routes>
         <Route path="/" element={<PortfolioWithThemeProvider />} />
-        <Route path="/login" element={<UserRegistration />} />
+        <Route path="/login-ramnarayanMandal" element={<UserRegistration />} />
         {/* Admin routes */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/skill" element={<Skill />} />
