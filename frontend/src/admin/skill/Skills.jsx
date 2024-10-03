@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UpdateSkill from './UpdateSkill';
+import { motion } from 'framer-motion';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -51,6 +52,12 @@ const Skills = () => {
   };
 
   return (
+    <motion.div 
+      className="form-container"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
     <div className='flex justify-center items-center flex-col lg:px-0 md:mx-0 ml-20  md:px-0 px-5 py-20'>
       <div className="flex justify-between items-center w-full lg:px-32 ">
         <h1 className='lg:text-4xl text-2xl font-bold font-serif text-[#2C3E50]'>My Skills</h1>
@@ -127,6 +134,7 @@ const Skills = () => {
         </div>
       )}
     </div>
+    </motion.div>
   );
 };
 

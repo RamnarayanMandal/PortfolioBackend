@@ -6,7 +6,6 @@ import UserRegistration from './component/UserRegistration';
 import Skill from '../src/admin/skill/Skills';
 import { AdminDashboard } from './admin/AdminDashboard';
 import UpdateSkill from './admin/skill/UpdateSkill';
-import CreateSkill from './admin/skill/CreateSkill';
 import CreateProfile from './admin/UserProfile/CreateProfile';
 import Education from './admin/education/Education';
 import CreateEducation from './admin/education/CreateEducation';
@@ -77,7 +76,6 @@ const MainContent = () => {
         {/* Admin routes */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/skill" element={<Skill />} />
-        <Route path="/createSkill" element={<CreateSkill />} />
         <Route path="/updateSkill/:id" element={<UpdateSkill />} />
         <Route path="/update-Bio" element={<CreateProfile />} />
         <Route path="/education" element={<Education />} />

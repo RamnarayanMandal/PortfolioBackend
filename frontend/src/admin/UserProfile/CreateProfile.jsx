@@ -3,6 +3,8 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
+import Swal from 'sweetalert2'; // Import SweetAlert2
+
 
 const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
     const { register, handleSubmit, formState: { errors }, control } = useForm({
@@ -26,11 +28,20 @@ const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
         try {
             const response = await axios.put(`${URI}/api/users/update/${userProfile._id}`, data);
             console.log('Response from server:', response.data);
-            alert('Profile updated successfully!');
+            Swal.fire({
+                icon: 'success',
+                title: 'User update successfully!',
+                showConfirmButton: false,
+                timer: 1500
+              });
             setShowModalUpdate(false);
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('There was an error updating the profile.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'There was an error updating the user.',
+              });
         }
     };
 

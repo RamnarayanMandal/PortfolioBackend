@@ -54,7 +54,7 @@ export const ProjectDetils = () => {
         {project.imageUrl && (
           <div className="relative">
             <img
-              className="w-full h-64 md:h-96 object-cover rounded-md"
+              className="w-full h-full  object-cover rounded-md"
               src={project.imageUrl[currentImageIndex]}
               alt={`${project.name} - ${currentImageIndex + 1}`}
             />

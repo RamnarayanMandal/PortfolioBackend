@@ -37,7 +37,7 @@ export const Navbar = () => {
                 key={log.id}
                 src={log.logo}
                 alt="logo"
-                className="h-10 w-32 rounded-full object-cover"
+                className="h-6 w-full rounded-full object-cover"
               />
             ))
           ) : (

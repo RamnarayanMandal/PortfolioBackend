@@ -51,32 +51,52 @@ const Education = () => {
       </div>
 
       <div className="w-full grid grid-cols-1 gap-8 ml-20 py-20">
-        {edus.map((edu) => (
-          <div key={edu._id} className="flex flex-col lg:flex-row items-center bg-white rounded-lg  overflow-hidden p-4">
-            <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-              <img
-                className="object-cover w-full h-48 lg:h-auto"
-                src={edu.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Emmanuel_College_Front_Court%2C_Cambridge%2C_UK_-_Diliff.jpg'}
-                alt="Education"
-              />
+        {edus.length > 0 ? (
+          edus.map((edu) => (
+            <div
+              key={edu._id}
+              className="flex flex-col lg:flex-row items-center bg-white rounded-lg overflow-hidden p-4"
+            >
+              <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                <img
+                  className="object-cover w-full h-48 lg:h-auto"
+                  src={
+                    edu.
+                    image
+                     ||
+                    'https://upload.wikimedia.org/wikipedia/commons/b/bd/Emmanuel_College_Front_Court%2C_Cambridge%2C_UK_-_Diliff.jpg'
+                  }
+                  alt="Education"
+                />
+              </div>
+              <div className="w-full lg:w-1/2 lg:px-20 md:px-10 px-5">
+                <p className="font-bold text-2xl md:text-4xl uppercase text-gray-600 tracking-wide">
+                  {edu.degree}
+                </p>
+                <h1 className="text-lg md:text-2xl text-gray-800 my-2">
+                  {edu.instituteName}
+                </h1>
+                <p className="text-gray-600 mb-4">{edu.description}</p>
+                <p className="text-xl font-bold text-green-700">
+                  {edu.percentage}%
+                </p>
+                <p className="text-gray-600 text-sm ml-2">
+                  {formatDate(edu.session.start)} - {formatDate(edu.session.end)}
+                </p>
+                <button
+                  className="button my-4"
+                  onClick={() => handleUpdateEducation(edu)}
+                >
+                  Update Education
+                </button>
+              </div>
             </div>
-            <div className="w-full lg:w-1/2 lg:px-20 md:px-10 px-5 ">
-              <p className="font-bold text-2xl md:text-4xl uppercase text-gray-600 tracking-wide">{edu.degree}</p>
-              <h1 className="text-lg md:text-2xl text-gray-800 my-2">{edu.instituteName}</h1>
-              <p className="text-gray-600 mb-4">{edu.description}</p>
-              <p className="text-xl font-bold text-green-700">{edu.percentage}%</p>
-              <p className="text-gray-600 text-sm ml-2">
-                {formatDate(edu.session.start)} - {formatDate(edu.session.end)}
-              </p>
-              <button
-                className="button my-4"
-                onClick={() => handleUpdateEducation(edu)}
-              >
-                Update Education
-              </button>
-            </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-600 text-lg">
+            No education records found.
           </div>
-        ))}
+        )}
       </div>
 
       {showModel && (

@@ -8,20 +8,27 @@ import { PiUsersFourBold } from "react-icons/pi";
 import axios from 'axios'; 
 import './Sidebar.css';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';  // Import SweetAlert2
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [logo, setLogo] = useState(null);
+  const [logo, setLogo] = useState([]);
   const [logoFile, setLogoFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   
   const URI = import.meta.env.VITE_API_URL;
   
-  const email = localStorage.getItem("email"); // Corrected the usage of email storage
+  const email = localStorage.getItem("email");
   const [userProfile, setUserProfile] = useState({ email });
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+  let logoId;
+
+  if(logo.length > 0) {
+      logoId = logo[0]._id;
+    
+  } 
 
   const handleLogout = () => {
     localStorage.clear();
@@ -38,6 +45,7 @@ const Sidebar = () => {
       console.log(resp.data);
     } catch (error) {
       console.error('Error fetching logo:', error);
+      Swal.fire('Error', 'Unable to fetch logo!', 'error');  // Error alert for logo fetching
     }
   };
 
@@ -49,8 +57,10 @@ const Sidebar = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setLogo(resp.data.logo);
+      Swal.fire('Success', 'Logo uploaded successfully!', 'success');  // Success alert for logo upload
     } catch (error) {
       console.error('Error creating logo:', error);
+      Swal.fire('Error', 'Failed to upload logo!', 'error');  // Error alert for logo upload
     }
   };
 
@@ -58,12 +68,14 @@ const Sidebar = () => {
     try {
       const formData = new FormData();
       formData.append('logo', logoFile);
-      const resp = await axios.post(`${URI}/api/logo/${logo.id}`, formData, {
+      const resp = await axios.put(`${URI}/api/logo/${logoId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setLogo(resp.data.logo);
+      Swal.fire('Success', 'Logo updated successfully!', 'success');  // Success alert for logo update
     } catch (error) {
       console.error('Error updating logo:', error);
+      Swal.fire('Error', 'Failed to update logo!', 'error');  // Error alert for logo update
     }
   };
 
@@ -81,25 +93,27 @@ const Sidebar = () => {
     { label: 'Logout', icon: <FaSignOutAlt />, action: handleLogout },
   ];
 
+  
+
   return (
     <div className="sidebar-wrapper text-base font-semibold font-serif z-10">
       <div className={`sidebar ${isOpen ? 'open' : ''}`} id="sidebar">
         <ul>
         <div className="profile">
-  {logo && logo.length > 0 ? (
-    logo.map((log) => (
-      <img
-        key={log.id} // Add a key if it's a list
-        src={log.logo}
-        alt="logo"
-        className="h-10 w-32 rounded-full object-cover"
-      />
-    ))
-  ) : (
-    <p>Loading logo...</p>
-  )}
-  <span>{userProfile?.email || 'Username'}</span>
-</div>
+          {logo && logo.length > 0 ? (
+            logo.map((log) => (
+              <img
+                key={log.id} 
+                src={log.logo}
+                alt="logo"
+                className="h-10 w-10 rounded-full object-cover"
+              />
+            ))
+          ) : (
+            <p>No logo found. Please upload a logo.</p> 
+          )}
+          <span className='over'>{userProfile?.email || 'Username'}</span>
+        </div>
 
           <div className="indicator" id="indicator"></div>
           {menuItems.map((item, index) => (
@@ -133,7 +147,7 @@ const Sidebar = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (logo) {
+                if (logo.length > 0) {
                   updateLogo(); // Update logo if it already exists
                 } else {
                   createLogo(); // Create a new logo if none exists
@@ -158,7 +172,7 @@ const Sidebar = () => {
                   type="submit"
                   className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                  {logo ? "Update Logo" : "Upload Logo"}
+                  {logo.length > 0 ? "Update Logo" : "Upload Logo"}
                 </button>
                 <button
                   onClick={closeModal}

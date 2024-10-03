@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import './CreateProfile.css'; // Custom CSS for styling
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const UserForm = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -17,11 +18,20 @@ const UserForm = () => {
       // Reset form on successful submission
       reset();
 
-      // Optionally, handle success (e.g., show a success message)
-      alert('User registered successfully!');
+      Swal.fire({
+        icon: 'success',
+        title: 'User registered successfully!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+
     } catch (error) {
       console.error('Error registering user:', error);
-      alert('There was an error registering the user.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'There was an error registering the user.',
+      });
     }
   };
 

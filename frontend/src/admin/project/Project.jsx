@@ -29,8 +29,7 @@ export const Project = () => {
     fetchProjects();
   }, []);
 
-  if (loading) return <p className="flex justify-center items-center content-center"><span className="loader"></span></p>;
-  if (error) return <p>Error: {error}</p>;
+  
 
   const handleUpdateProject = (project) => {
     setSelectedProject(project); // Set the selected project for editing
@@ -67,11 +66,11 @@ export const Project = () => {
             <div
               key={project._id}
               className="bg-[#222222] rounded-xl shadow-lg overflow-hidden relative group transform transition-transform hover:scale-105 hover:shadow-2xl text-white pb-4"
-             onClick={()=>handleOnclick(project)}>
+            >
               {/* Image */}
-              <div className='flex justify-center items-center content-center my-4'>
+              <div className='flex justify-center items-center content-center my-4'  onClick={()=>handleOnclick(project)}>
                 <img
-                  src={project.imageUrl || 'https://via.placeholder.com/500'}
+                  src={project?.imageUrl[0] || 'https://via.placeholder.com/500'}
                   alt={project.name}
                  className='lg:w-52 lg:h-52 md:w-32 md:h-32 w-40 h-40 rounded-full object-cover border-4 border-red-600 hover:border-white'
                 />

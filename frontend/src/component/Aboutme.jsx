@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../ThemeContext'; // Import your theme context
+import { motion } from 'framer-motion';
 
 export const Aboutme = () => {
   const [userProfile, setUserProfile] = useState(null); // Initialize state as null
@@ -28,6 +29,12 @@ export const Aboutme = () => {
   const resumeLink = userProfile.socialMedia.find((social) => social.name === 'resume')?.url;
 
   return (
+    <motion.div 
+      className="form-container"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
     <section id="about" className={`py-12 max-w-7xl mx-auto lg:px-0 md:px-0 px-5 ${isDarkMode ? 'bg-gray-900 text-white' : ''}`}>
       <h2 className="text-3xl font-bold mb-6">About Me</h2>
       <p className="text-lg mb-6">
@@ -49,5 +56,6 @@ export const Aboutme = () => {
         </a>
       </div>
     </section>
+    </motion.div>
   );
 };
