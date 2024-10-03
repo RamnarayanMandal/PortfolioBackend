@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../Sidebar';
 import { useNavigate } from 'react-router-dom';
 import CreateEducation from './CreateEducation';
+import { motion } from 'framer-motion';
 
 const Education = () => {
   const [edus, setEdus] = useState([]);
@@ -40,6 +40,12 @@ const Education = () => {
   };
 
   return (
+    <motion.div 
+      className="form-container"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
     <div className="flex flex-col items-center w-full p-4 px-5">
       <div className="fixed top-12 right-12 p-4">
         <button
@@ -105,6 +111,7 @@ const Education = () => {
         </div>
       )}
     </div>
+    </motion.div>
   );
 };
 

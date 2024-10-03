@@ -3,6 +3,7 @@ import axios from 'axios';
 import Sidebar from '../Sidebar';
 import UpdateProject from './UpdateProject';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const Project = () => {
   const [projects, setProjects] = useState([]);
@@ -48,6 +49,12 @@ export const Project = () => {
 
   
     return (
+      <motion.div 
+      className="form-container"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className='flex  content-center items-center flex-col pl-20 pr-2  pt-20 pb-20'>
         
     
@@ -125,6 +132,7 @@ export const Project = () => {
           </div>
         )}
       </div>
+      </motion.div>
     );
   }   
 

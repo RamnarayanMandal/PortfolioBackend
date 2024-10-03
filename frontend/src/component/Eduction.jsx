@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useTheme } from '../ThemeContext';
+import { motion } from 'framer-motion';
 
 export const Education = () => {
   const [educationRecords, setEducationRecords] = useState([]);
@@ -21,6 +22,13 @@ export const Education = () => {
   }, []);
 
   return (
+    <motion.div 
+    className="form-container"
+    initial={{ opacity: 0, scale: 0.9, y: -50 }} // Start off-screen from the top
+    animate={{ opacity: 1, scale: 1, y: 0 }} // Slide into position
+    exit={{ opacity: 0, scale: 0.9, y: -50 }} // Optional: exit animation
+    transition={{ duration: 0.5 }}
+    >
     <section 
       id="education" 
       className={`py-12 w-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
@@ -73,6 +81,8 @@ export const Education = () => {
           animation: slide 20s linear infinite;
         }
       `}</style>
+
     </section>
+    </motion.div>
   );
 };

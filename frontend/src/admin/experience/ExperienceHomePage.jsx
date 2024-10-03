@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import AddExperience from './AddExperience';
+import { motion } from 'framer-motion';
 
 export const ExperienceHomePage = () => {
   const [experience, setExperience] = useState([]);
@@ -49,6 +50,12 @@ export const ExperienceHomePage = () => {
   };
 
   return (
+    <motion.div 
+    className="form-container"
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5 }}
+  >
     <div className="relative lg:px-20 md:mx-0 ml-20 md:px-0 px-2 py-20">
       <div className='flex justify-between content-center items-center gap-4'>
         <h2 className="mb-8 lg:text-3xl md:text-xl text-sm font-light text-center text-blue-600">
@@ -94,5 +101,6 @@ export const ExperienceHomePage = () => {
         </div>
       )}
     </div>
+    </motion.div>
   );
 };

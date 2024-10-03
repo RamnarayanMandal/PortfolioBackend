@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Ensure axios is installed
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../ThemeContext';
+import { motion } from 'framer-motion';
+
 
 export const Project = () => {
   const [projects, setProjects] = useState([]);
@@ -44,6 +46,13 @@ export const Project = () => {
   };
 
   return (
+    <motion.div 
+    className="form-container"
+    initial={{ opacity: 0, scale: 0.9, y: -50 }} // Start off-screen from the top
+    animate={{ opacity: 1, scale: 1, y: 0 }} // Slide into position
+    exit={{ opacity: 0, scale: 0.9, y: -50 }} // Optional: exit animation
+    transition={{ duration: 0.5 }}
+    >
     <section 
       id="projects" 
       style={isDarkMode ? {} : lightModeStyles} // Apply light mode styles only when not in dark mode
@@ -95,5 +104,6 @@ export const Project = () => {
         ))}
       </div>
     </section>
+    </motion.div>
   );
 };
