@@ -10,13 +10,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-
-
-
-
-
- // Optional for better status code handling
-
 // Signup Controller
 export const signupController = async (req, res) => {
     try {

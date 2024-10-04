@@ -461,6 +461,91 @@ section .title::after{
   }
 }
 
+.certificate-btn {
+  cursor: pointer;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  min-height: 40px;
+  font-weight: 500;
+  user-select: none;
+  color: #f51ba1;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  border: 2px solid #ff22bd;
+  transition: all 0.5s ease;
+  z-index: 1;
+  margin: 40px;
+
+  &:hover {
+    color: #ffffff; /* Text color becomes white on hover */
+    @include colorChange(#4287f5, 10%);
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ff00b3;
+    z-index: -10;
+    transition: width 0.5s ease;
+  }
+
+  &:hover::before {
+    width: 100%;
+  }
+}
+
+.certificate-btn-delete {
+  cursor: pointer;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  min-height: 40px;
+  font-weight: 500;
+  user-select: none;
+  color: #fa0000;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  border: 2px solid #ff0606;
+  transition: all 0.5s ease;
+  z-index: 1;
+  margin: 40px;
+
+  &:hover {
+    color: #ffffff; /* Text color becomes white on hover */
+    @include colorChange(#4287f5, 10%);
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ff0000;
+    z-index: -10;
+    transition: width 0.5s ease;
+  }
+
+  &:hover::before {
+    width: 100%;
+  }
+}
+
+
 
 
 .buttonView {

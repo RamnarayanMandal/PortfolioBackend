@@ -9,6 +9,9 @@ import axios from 'axios';
 import './Sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';  // Import SweetAlert2
+import { GrCertificate } from "react-icons/gr";
+import { LiaBlogSolid } from "react-icons/lia";
+import { PiStudentBold } from "react-icons/pi";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,7 +91,9 @@ const Sidebar = () => {
     { label: 'Skills', icon: <GiSkills />, route: '/skill' },
     { label: 'Projects', icon: <GoProjectSymlink />, route: '/projects' },
     { label: 'Experience', icon: <SiKnowledgebase />, route: '/experience' },
-    { label: 'Education', icon: <MdCastForEducation />, route: '/education' },
+    { label: 'Education', icon: <PiStudentBold />, route: '/education' },
+    { label: 'Certificate', icon: <GrCertificate/>, route: '/certificate' },
+    { label: 'Blog', icon: < LiaBlogSolid  />, route: '/blog' },
     { label: 'Go to Client', icon: <PiUsersFourBold />, route: '/' },
     { label: 'Logout', icon: <FaSignOutAlt />, action: handleLogout },
   ];

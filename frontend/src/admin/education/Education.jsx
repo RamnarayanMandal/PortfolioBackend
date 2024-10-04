@@ -61,7 +61,7 @@ const Education = () => {
           edus.map((edu) => (
             <div
               key={edu._id}
-              className="flex flex-col lg:flex-row items-center bg-white rounded-lg overflow-hidden p-4"
+              className="flex flex-col lg:flex-row items-center  rounded-lg overflow-hidden p-4"
             >
               <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
                 <img

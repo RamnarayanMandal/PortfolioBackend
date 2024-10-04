@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     title: {
         type: String
     },
-    Bio:{
+    bio:{
         type: String,
         
     },

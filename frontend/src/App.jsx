@@ -15,6 +15,8 @@ import { ProjectDetils } from './admin/project/ProjectDetils';
 import ProjectAbout from './component/ProjectDetils';
 import { ExperienceHomePage } from './admin/experience/ExperienceHomePage';
 import { ThemeProvider } from './ThemeContext';
+import Certificate from './admin/Certificate/Certificate';
+import Blog from './admin/Blog/Blog';
 
 const App = () => {
   return (
@@ -43,6 +45,11 @@ const MainContent = () => {
       case '/skill':
       case '/admin-dashboard':
       case '/contactMe':
+      case '/certificate':
+      case '/education':
+        case '/blog':
+
+
         return {
           backgroundImage: 'url("https://img.freepik.com/free-photo/blue-toned-collection-paper-sheets-with-copy-space_23-2148320445.jpg?w=900&t=st=1709066598~exp=1709067198~hmac=c5c0995a7289d90e1e59f33310d419716d3975cedc8f97a8f31c119f7619dcaf")',
           backgroundSize: 'cover',
@@ -83,8 +90,11 @@ const MainContent = () => {
         <Route path="/adminUpdateSkill/:id" element={<UpdateSkill />} />
         <Route path="/projects" element={<Project />} />
         <Route path="/Project-Details" element={<ProjectDetils />} />
-        <Route path="/about-project" element={<ProjectAbout />} />
+        <Route path="/about-project" element={<PortfolioWithThemeProviderAndProjectDetails />} />
         <Route path="/experience" element={<ExperienceHomePage />} />
+        <Route path="/certificate" element={<Certificate />} />
+        <Route path="/blog" element={<Blog />} />
+
       </Routes>
     </div>
   );
@@ -95,6 +105,15 @@ const PortfolioWithThemeProvider = () => {
   return (
     <ThemeProvider>
       <Portfolio />
+    </ThemeProvider>
+  );
+};
+
+
+const PortfolioWithThemeProviderAndProjectDetails = () => {
+  return (
+    <ThemeProvider>
+      <ProjectAbout />
     </ThemeProvider>
   );
 };

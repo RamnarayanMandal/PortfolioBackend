@@ -10,6 +10,7 @@ import ContactUs from './ContactUs';
 import WorkExperience from './WorkExperience';
 import { useTheme } from '../ThemeContext';
 import {Aboutme} from './Aboutme';
+import { CertificateComponent } from './CertificateComponent';
 
 function Portfolio() {
     const { isDarkMode } = useTheme();
@@ -41,6 +42,7 @@ function Portfolio() {
                 <Education />
                 <Skill />
                 <Project />
+                <CertificateComponent/>
             </main>
             
             <ContactUs />

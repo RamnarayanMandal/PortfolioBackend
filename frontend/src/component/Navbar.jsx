@@ -89,6 +89,9 @@ export const Navbar = () => {
           <a href="#education" className="hover:text-gray-900">Education</a>
           <a href="#skills" className="hover:text-gray-900">Skills</a>
           <a href="#projects" className="hover:text-gray-900">Projects</a>
+          <a href="#certificate" className="hover:text-gray-900">Certificate</a>
+          <a href="#blog" className="hover:text-gray-900">Blogs</a>
+
           <a href="#contact" className="hover:text-gray-900">Contact</a>
           <button onClick={handleLogin} className="hover:text-gray-900">Login</button>
         </div>

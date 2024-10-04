@@ -160,7 +160,7 @@ const UpdateSkill = ({ showModal, skill }) => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700">Description</label>
+          <label className="block text-gray-700">description</label>
           <textarea
             name="description"
             value={skillData.description}
