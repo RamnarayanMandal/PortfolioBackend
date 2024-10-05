@@ -11,6 +11,8 @@ import WorkExperience from './WorkExperience';
 import { useTheme } from '../ThemeContext';
 import {Aboutme} from './Aboutme';
 import { CertificateComponent } from './CertificateComponent';
+import { BlogComponent } from './BlogComponent';
+
 
 function Portfolio() {
     const { isDarkMode } = useTheme();
@@ -43,9 +45,13 @@ function Portfolio() {
                 <Skill />
                 <Project />
                 <CertificateComponent/>
+                <BlogComponent/>
+           
+
             </main>
             
             <ContactUs />
+            
             <Footer />
         </div>
     );

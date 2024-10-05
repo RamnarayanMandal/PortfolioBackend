@@ -134,16 +134,7 @@ const UpdateProject = ({ showModal, project }) => {
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700">Description</label>
-            <textarea
-              name="description"
-              value={projectData.description}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
-            />
-          </div>
+          
 
           <div className="mb-4">
             <label className="block text-gray-700">Role</label>
@@ -261,7 +252,18 @@ const UpdateProject = ({ showModal, project }) => {
               className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
             />
           </div>
+          
         </div>
+        <div className="mb-4">
+            <label className="block text-gray-700">Description</label>
+            <textarea
+              name="description"
+              value={projectData.description}
+              onChange={handleChange}
+              required
+              className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
+            />
+          </div>
 
         <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
           {project ? 'Update Project' : 'Add Project'}

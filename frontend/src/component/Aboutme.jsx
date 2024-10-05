@@ -22,9 +22,8 @@ export const Aboutme = () => {
     }
   };
 
-  console.log("Fetching user profile", userProfile.bio);
-  // Find the resume URL in the socialMedia array
-  const resumeLink = userProfile.socialMedia.find((social) => social.name === 'resume')?.url;
+ 
+  const resumeLink = userProfile?.socialMedia?.find((social) => social.name === 'resume')?.url;
 
   return (
     <motion.div 
@@ -36,7 +35,7 @@ export const Aboutme = () => {
     <section id="about" className={`py-12 max-w-7xl mx-auto lg:px-0 md:px-0 px-5 ${isDarkMode ? 'bg-gray-900 text-white' : ''}`}>
       <h2 className="text-3xl font-bold mb-6">About Me</h2>
       <p className="text-lg mb-6">
-        {userProfile.bio}
+        {userProfile?.bio}
       </p>
       <div className="flex space-x-4">
         {/* Display resume link if it exists */}

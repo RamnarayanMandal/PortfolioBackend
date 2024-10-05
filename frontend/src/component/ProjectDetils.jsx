@@ -46,7 +46,7 @@ export const ProjectDetils = () => {
   };
 
   return (
-    <div className={`container mx-auto p-6 md:p-12 pl-20 ${isDarkMode ? 'bg-gray-900 text-gray-200' : 'bg-white text-gray-800'}`}>
+    <div className={`py-20 lg:px-40  ${isDarkMode ? 'bg-gray-900 text-gray-200' : 'bg-white text-gray-800'}`}>
       <Navbar />
       <div className="overflow-hidden">
 
@@ -62,7 +62,7 @@ export const ProjectDetils = () => {
         {project.imageUrl && (
           <div className="relative">
             <img
-              className="w-full h-full object-cover rounded-md"
+              className="w-full h-full object-cover rounded-md lg:fixed  left-0 "
               src={project.imageUrl[currentImageIndex]}
               alt={`${project.name} - ${currentImageIndex + 1}`}
             />

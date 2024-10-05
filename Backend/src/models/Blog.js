@@ -1,5 +1,6 @@
-import mongoose from 'mongoose'; 
+import mongoose from 'mongoose';
 
+// Define the Comment schema
 const CommentSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,11 +17,11 @@ const CommentSchema = new mongoose.Schema({
   },
   likes: {
     type: Number,
-    default: 0, // Initialize likes count
+    default: 0,
   },
   dislikes: {
     type: Number,
-    default: 0, // Initialize dislikes count
+    default: 0,
   },
 });
 
@@ -29,8 +30,9 @@ const CategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+    unique: true, // Ensure each category name is unique
   },
+  description: String, // Optional field to store description of category
 });
 
 // Define the BlogPost schema
@@ -45,7 +47,7 @@ const BlogPostSchema = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author',
+    ref: 'User',
     required: true,
   },
   categories: [
@@ -89,11 +91,11 @@ const BlogPostSchema = new mongoose.Schema({
   ],
   likes: {
     type: Number,
-    default: 0, // Initialize likes count
+    default: 0,
   },
   dislikes: {
     type: Number,
-    default: 0, // Initialize dislikes count
+    default: 0,
   },
 });
 

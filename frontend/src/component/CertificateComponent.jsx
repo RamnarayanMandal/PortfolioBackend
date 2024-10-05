@@ -57,7 +57,7 @@ export const CertificateComponent = () => {
     >
       <section
         id="certificate"
-        className={`py-12 w-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}
+        className={`py-12 w-screen ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}
       >
         <div className="text-center mb-10">
           <h2 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>

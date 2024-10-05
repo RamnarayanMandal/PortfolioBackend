@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import bodyParser from'body-parser'
 import morgan from "morgan";
 import cors from "cors";
 import connectDb from "./src/db/conn.js";
@@ -19,7 +20,8 @@ connectDb();
 
 const app = express();
 
-
+app.use(bodyParser.json()); // For JSON data
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));

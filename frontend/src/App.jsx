@@ -17,6 +17,7 @@ import { ExperienceHomePage } from './admin/experience/ExperienceHomePage';
 import { ThemeProvider } from './ThemeContext';
 import Certificate from './admin/Certificate/Certificate';
 import Blog from './admin/Blog/Blog';
+import { BlogDetailsPage } from './component/BlogDetailsPage';
 
 const App = () => {
   return (
@@ -34,7 +35,9 @@ const MainContent = () => {
   const showSideBar = !(
     location.pathname === '/' || 
     location.pathname === '/about-project' || 
-    location.pathname === '/login-ramnarayanMandal'
+    location.pathname === '/login-ramnarayanMandal'||
+    location.pathname === "/blogDetails"
+
   );
 
   // Function to set background style based on the route
@@ -47,9 +50,8 @@ const MainContent = () => {
       case '/contactMe':
       case '/certificate':
       case '/education':
-        case '/blog':
-
-
+      case '/blog':
+      case 'blogDetails':
         return {
           backgroundImage: 'url("https://img.freepik.com/free-photo/blue-toned-collection-paper-sheets-with-copy-space_23-2148320445.jpg?w=900&t=st=1709066598~exp=1709067198~hmac=c5c0995a7289d90e1e59f33310d419716d3975cedc8f97a8f31c119f7619dcaf")',
           backgroundSize: 'cover',
@@ -94,6 +96,8 @@ const MainContent = () => {
         <Route path="/experience" element={<ExperienceHomePage />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blogDetails" element={<PortfolioWithThemeProviderAndBlogDetails />} />
+
 
       </Routes>
     </div>
@@ -117,5 +121,15 @@ const PortfolioWithThemeProviderAndProjectDetails = () => {
     </ThemeProvider>
   );
 };
+
+
+const PortfolioWithThemeProviderAndBlogDetails = () => {
+  return (
+    <ThemeProvider>
+      <BlogDetailsPage/>
+    </ThemeProvider>
+  );
+};
+
 
 export default App;

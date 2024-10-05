@@ -1,79 +1,100 @@
 import { Comment, Category, BlogPost } from '../models/Blog.js';
+import uploadOnCloudinary from "../utils/cloudinary.js"
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import uploadOnCloudinary from "../utils/cloudinary.js"
+import { StatusCodes } from 'http-status-codes';
 
 
-// Create a new blog post
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const createPost = async (req, res) => {
-    try {
-      const { title, content, author, categories } = req.body;
-  
-      let imageCloudinaryUrl = null;
-      let videoCloudinaryUrl = null;
-      let audioCloudinaryUrl = null;
-      let documentUrls = [];
-  
-      // Handle image upload to Cloudinary
-      if (req.files && req.files.image && req.files.image.length > 0) {
-        const result = await uploadOnCloudinary(req.files.image[0].path, {
-          folder: 'blog_images', // Specify a folder in Cloudinary
-          resource_type: 'image',
-        });
-        imageCloudinaryUrl = result.secure_url;
-      }
-  
-      // Handle video upload to Cloudinary
-      if (req.files && req.files.video && req.files.video.length > 0) {
-        const result = await uploadOnCloudinary(req.files.video[0].path, {
-          folder: 'blog_videos',
-          resource_type: 'video',
-        });
-        videoCloudinaryUrl = result.secure_url;
-      }
-  
-      // Handle audio upload to Cloudinary
-      if (req.files && req.files.audio && req.files.audio.length > 0) {
-        const result = await uploadOnCloudinary(req.files.audio[0].path, {
-          folder: 'blog_audio',
-          resource_type: 'audio',
-        });
-        audioCloudinaryUrl = result.secure_url;
-      }
-  
-      // Handle documents upload to Cloudinary
-      if (req.files && req.files.documents && req.files.documents.length > 0) {
-        for (const file of req.files.documents) {
-          const result = await uploadOnCloudinary(file.path, {
-            folder: 'blog_documents',
-            resource_type: 'raw', // 'raw' for non-image/video/audio files
-          });
-          documentUrls.push({ title: file.originalname, url: result.secure_url });
-        }
-      }
-  
-      // Create the blog post document
-      const newPost = new BlogPost({
-        title,
-        content,
-        author,
-        categories,
-        image: imageCloudinaryUrl,
-        video: videoCloudinaryUrl,
-        audio: audioCloudinaryUrl,
-        documents: documentUrls,
-      });
-  
-      // Save the post
-      await newPost.save();
-  
-      // Return the created post
-      res.status(201).json(newPost);
-    } catch (error) {
-      res.status(500).json({ message: 'Error creating post', error });
+  try {
+    const { title, content, author, categories } = req.body;
+
+    let imageCloudinaryUrl = null;
+    let videoCloudinaryUrl = null;
+    let audioCloudinaryUrl = null;
+    let documentUrls = [];
+
+    // Ensure categories is an array
+    let categoryArray = Array.isArray(categories) ? categories : [categories];
+
+    // Handle image upload to Cloudinary
+    if (req.files && req.files.image && req.files.image.length > 0) {
+      const imageLocalPath = req.files.image[0].path;
+      const result = await uploadOnCloudinary(imageLocalPath);
+      
+      imageCloudinaryUrl = result.url;
     }
-  };
+
+    // Handle video upload to Cloudinary
+    if (req.files && req.files.video && req.files.video.length > 0) {
+      const result = await uploadOnCloudinary(req.files.video[0].path, {
+        folder: 'blog_videos',
+        resource_type: 'video',
+      });
+      videoCloudinaryUrl = result.url;
+    }
+
+    // Handle audio upload to Cloudinary
+    if (req.files && req.files.audio && req.files.audio.length > 0) {
+      const result = await uploadOnCloudinary(req.files.audio[0].path, {
+        folder: 'blog_audio',
+        resource_type: 'audio',
+      });
+      audioCloudinaryUrl = result.url;
+    }
+
+    // Handle documents upload to Cloudinary
+    if (req.files && req.files.documents && req.files.documents.length > 0) {
+      for (const file of req.files.documents) {
+        const result = await uploadOnCloudinary(file.path, {
+          folder: 'blog_documents',
+          resource_type: 'raw', // raw for documents like PDFs
+        });
+        documentUrls.push({ title: file.originalname, url: result.url });
+      }
+    }
+
+    // Find or create categories by name
+    const categoryIds = await Promise.all(
+      categoryArray.map(async (categoryName) => {
+        let category = await Category.findOne({ name: categoryName });
+        if (!category) {
+          category = new Category({ name: categoryName });
+          await category.save();
+        }
+        return category._id;
+      })
+    );
+
+    // Create the blog post document
+    const newPost = new BlogPost({
+      title,
+      content,
+      author,
+      categories: categoryIds, // Use the ObjectId array for categories
+      image: imageCloudinaryUrl,
+      video: videoCloudinaryUrl,
+      audio: audioCloudinaryUrl,
+      documents: documentUrls,
+    });
+
+    // Save the post
+    await newPost.save();
+
+    // Return the created post
+    res.status(201).json(newPost);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating post', error: error.message });
+  }
+};
+
+
+
+
 
 // Get all blog posts
  export const  getAllPosts = async (req, res) => {
@@ -100,66 +121,77 @@ export const createPost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   try {
+    console.log('Request Body:', req.body);
+    console.log('Uploaded Files:', req.files);
+    
     const { title, content, categories } = req.body;
     let updateFields = {};
 
-    // Update text fields if provided
     if (title) updateFields.title = title;
     if (content) updateFields.content = content;
-    if (categories) updateFields.categories = categories;
 
-    // Check and update image
-    if (req.files && req.files.image && req.files.image.length > 0) {
-      const result = await uploadOnCloudinary(req.files.image[0].path, {
-        folder: 'blog_images',
-        resource_type: 'image',
+    const uploadFiles = async (file, folder, resourceType) => {
+      const result = await uploadOnCloudinary(file.path, {
+        folder,
+        resource_type: resourceType,
       });
-      updateFields.image = result.secure_url; // Update image URL
-    }
+      return result.url;
+    };
 
-    // Check and update video
-    if (req.files && req.files.video && req.files.video.length > 0) {
-      const result = await uploadOnCloudinary(req.files.video[0].path, {
-        folder: 'blog_videos',
-        resource_type: 'video',
-      });
-      updateFields.video = result.secure_url; // Update video URL
-    }
+    if (req.files) {
+      const { image, video, audio, documents } = req.files;
 
-    // Check and update audio
-    if (req.files && req.files.audio && req.files.audio.length > 0) {
-      const result = await uploadOnCloudinary(req.files.audio[0].path, {
-        folder: 'blog_audio',
-        resource_type: 'audio',
-      });
-      updateFields.audio = result.secure_url; // Update audio URL
-    }
-
-    // Check and update documents
-    if (req.files && req.files.documents && req.files.documents.length > 0) {
-      let documentUrls = [];
-      for (const file of req.files.documents) {
-        const result = await uploadOnCloudinary(file.path, {
-          folder: 'blog_documents',
-          resource_type: 'raw', // Use 'raw' for documents like PDFs
-        });
-        documentUrls.push({ title: file.originalname, url: result.secure_url });
+      if (image && image.length > 0) {
+        updateFields.image = await uploadFiles(image[0], 'blog_images', 'image');
       }
-      updateFields.documents = documentUrls; // Update document URLs
+
+      if (video && video.length > 0) {
+        updateFields.video = await uploadFiles(video[0], 'blog_videos', 'video');
+      }
+
+      if (audio && audio.length > 0) {
+        updateFields.audio = await uploadFiles(audio[0], 'blog_audio', 'audio');
+      }
+
+      if (documents && documents.length > 0) {
+        let documentUrls = [];
+        for (const file of documents) {
+          const documentUrl = await uploadFiles(file, 'blog_documents', 'raw');
+          documentUrls.push({ title: file.originalname, url: documentUrl });
+        }
+        updateFields.documents = documentUrls;
+      }
     }
 
-    // Update the post with the new fields
+    console.log('Categories:', categories);
+    if (categories) {
+      const categoryArray = Array.isArray(categories) ? categories : [categories];
+      const categoryIds = await Promise.all(
+        categoryArray.map(async (categoryName) => {
+          let category = await Category.findOne({ name: categoryName });
+          if (!category) {
+            category = new Category({ name: categoryName });
+            await category.save();
+          }
+          return category._id;
+        })
+      );
+      updateFields.categories = categoryIds;
+    }
+
+    console.log('Update Fields:', updateFields);
     const post = await BlogPost.findByIdAndUpdate(req.params.id, updateFields, { new: true });
 
-    // If no post is found
     if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    // Return the updated post
     res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating post', error });
+    console.error('Error updating post:', error);
+    res.status(500).json({ message: 'Error updating post', error: error.message });
   }
 };
+
+
 
 
 // Delete a blog post
