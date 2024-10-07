@@ -68,7 +68,7 @@ const Skills = () => {
         </button>
       </div>
 
-      <div className="flex flex-wrap justify-center items-center content-center gap-8 mt-8">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1  gap-8 mt-8">
         {skills.length > 0 ? (
           skills.map((skill) => (
             <div
@@ -80,13 +80,13 @@ const Skills = () => {
                 <img
                   src={skill.logo || "https://via.placeholder.com/150"}
                   alt={skill.name}
-                  className='lg:w-40 md:w-32 w-20 rounded-full object-cover border-4 border-red-600 hover:border-white'
+                  className='lg:w-40 lg:h-40 md:w-32 md:h-32  w-20 h-20 rounded-full object-cover border-4 border-red-600 hover:border-white'
                 />
               </div>
 
               <h3 className="my-4 text-2xl font-semibold text-white text-center">{skill.name}</h3>
               <p className="text-xl text-gray-50 mt-2 text-center"><strong>Experience:</strong> {skill.yearsExperience} years</p>
-              <p className="text-base text-gray-50 mt-2 text-center">{skill.description}</p>
+              <p className="text-base text-gray-50 mt-2 text-center line-clamp-4">{skill.description}</p>
 
               {/* Star Rating */}
               <div className="text-center mt-2">

@@ -2,11 +2,20 @@ import mongoose from 'mongoose';
 
 // Define the Comment schema
 const CommentSchema = new mongoose.Schema({
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+
+  name:{
+    type: String,
     required: true,
+
+    
   },
+    email:{
+      type: String,
+      required: true,
+     
+    },
+  
+
   content: {
     type: String,
     required: true,

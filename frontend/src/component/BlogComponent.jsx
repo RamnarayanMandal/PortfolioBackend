@@ -18,17 +18,16 @@ export const BlogComponent = () => {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
-    useEffect(() => {
-        const fetchBlogPosts = async () => {
-            try {
-                const response = await fetch(`${BASE_URL}/api/Blogs/posts`);
-                const data = await response.json();
-                setBlogs(data);
-            } catch (error) {
-                console.error('Error fetching blog posts:', error);
-            }
-        };
+    const fetchBlogPosts = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/api/Blogs/posts`);
+            setBlogs(response.data);
+        } catch (error) {
+            console.error('Error fetching blog posts:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchBlogPosts();
     }, [BASE_URL]);
 
@@ -64,11 +63,31 @@ export const BlogComponent = () => {
         }, 5000);
     };
 
-    const filteredBlogs = blogs;
-
     const handleOnclick = (blog) => {
         console.log(blog);
         navigate("/blogDetails", { state: { blog } });
+    };
+
+    const handleLike = (blogId) => {
+        axios.post(`${BASE_URL}/api/Blogs/posts/${blogId}/like`)
+            .then((response) => {
+                setBlogs(blogs.map(blog => blog._id === blogId ? { ...blog, likes: (blog.likes || 0) + 1 } : blog));
+                console.log("Blog liked successfully!");
+            })
+            .catch((error) => {
+                console.error("Error liking blog:", error);
+            });
+    };
+
+    const handleDislike = (blogId) => {
+        axios.post(`${BASE_URL}/api/Blogs/posts/${blogId}/dislike`)
+            .then((response) => {
+                setBlogs(blogs.map(blog => blog._id === blogId ? { ...blog, dislikes: (blog.dislikes || 0) + 1 } : blog));
+                console.log("Blog disliked successfully!");
+            })
+            .catch((error) => {
+                console.error("Error disliking blog:", error);
+            });
     };
 
     return (
@@ -87,51 +106,63 @@ export const BlogComponent = () => {
                     <span className={`block w-20 h-1 ${isDarkMode ? 'bg-blue-500' : 'bg-blue-800'} mx-auto mt-2`}></span>
                 </div>
 
-                {filteredBlogs.length > 0 && (
+                {blogs.length > 0 && (
                     <div className="relative flex justify-center gap-4 items-center content-center px-4">
                         <div className="flex flex-col justify-center items-start border p-4 rounded-md shadow-md overflow-hidden w-full md:w-1/2 lg:w-1/4 cursor-pointer"
-                            onClick={() => handleOnclick(filteredBlogs[currentBlogIndex])}>
-                            {filteredBlogs[currentBlogIndex] && (
+                           >
+                            {blogs[currentBlogIndex] && (
                                 <>
                                     <h1 className="text-lg md:text-2xl text-gray-800 my-2 flex justify-start items-center gap-4">
-                                        <FaUserCircle /> {filteredBlogs[currentBlogIndex].author.name}
+                                        <FaUserCircle /> {blogs[currentBlogIndex].author.name}
                                     </h1>
-                                    <h2 className='text-xl font-bold my-2'>{filteredBlogs[currentBlogIndex].title}</h2>
-                                    {filteredBlogs[currentBlogIndex].image && (
+                                    <h2 className='text-xl font-bold my-2'>{blogs[currentBlogIndex].title}</h2>
+                                    {blogs[currentBlogIndex].image && (
                                         <img
-                                            src={filteredBlogs[currentBlogIndex].image}
-                                            alt={filteredBlogs[currentBlogIndex].title}
+                                            src={blogs[currentBlogIndex].image}
+                                            alt={blogs[currentBlogIndex].title}
                                             className='w-full h-96 rounded-md mb-2 object-cover'
-                                        />
+                                            onClick={() => handleOnclick(blogs[currentBlogIndex])} />
+                                    )}
+                                    {blogs[currentBlogIndex].video && (
+                                        <video
+                                            src={blogs[currentBlogIndex].video}
+                                            alt={blogs[currentBlogIndex].title}
+                                            controls
+                                            autoPlay
+                                            muted
+                                            className='w-full h-96 rounded-md mb-2 object-cover'
+                                            onClick={() => handleOnclick(blogs[currentBlogIndex])} />
+                                            
                                     )}
                                     <div
                                         className="line-clamp-4 overflow-hidden text-ellipsis"
-                                        dangerouslySetInnerHTML={{ __html: filteredBlogs[currentBlogIndex].content }}
+                                        dangerouslySetInnerHTML={{ __html: blogs[currentBlogIndex].content }}
                                     />
                                     <div className='mt-2'>
-                                        {filteredBlogs[currentBlogIndex].categories.map((category) => (
+                                        {blogs[currentBlogIndex].categories.map((category) => (
                                             <span key={category._id} className='text-blue-500 mr-2'>#{category.name}</span>
                                         ))}
                                     </div>
-                                    <div className='flex items-center content-center justify-between mt-4 w-full'>
-                                        <button className='flex items-center text-blue-500 mr-4'>
-                                            <FaThumbsUp className='mr-1 text-2xl' />
-                                            {filteredBlogs[currentBlogIndex].likes || 0}
+                                    <div className='flex items-center content-center justify-between mt-4 w-full gap-4'>
+                                        <button className='flex items-center text-blue-500 '>
+                                            <FaThumbsUp className=' text-4xl mr-2' onClick={() => handleLike(blogs[currentBlogIndex]._id)} />
+                                            {blogs[currentBlogIndex].likes || 0}
                                         </button>
-                                        <button className='flex items-center text-red-500'>
-                                            <FaThumbsDown className='mr-1 text-2xl' />
+                                        <button className='flex items-center text-red-500' onClick={() => handleDislike(blogs[currentBlogIndex]._id)}>
+                                            <FaThumbsDown className=' text-3xl' />
                                         </button>
-                                    </div>
-                                    {filteredBlogs[currentBlogIndex].comments && filteredBlogs[currentBlogIndex].comments.length > 0 ? (
-                                        <button className='flex items-center text-gray-500 ml-4'>
-                                            <FaRegComment className='mr-1' />
-                                            {filteredBlogs[currentBlogIndex].comments.length}
+                                        {blogs[currentBlogIndex].comments && blogs[currentBlogIndex].comments.length > 0 ? (
+                                        <button className='flex items-center text-gray-500 '>
+                                            <FaRegComment className='mr-1 text-4xl' />
+                                            {blogs[currentBlogIndex].comments.length}
                                         </button>
                                     ) : (
-                                        <span className='text-gray-400 ml-4'></span>
+                                        <span className='text-gray-400 '>No comments</span>
                                     )}
-                                    <p className="text-gray-600 text-sm my-2">
-                                        {formatDate(filteredBlogs[currentBlogIndex].createdAt)} - {formatDate(filteredBlogs[currentBlogIndex].updatedAt)}
+                                    </div>
+                                    
+                                    <p className="text-gray-600 text-sm my-6">
+                                        {formatDate(blogs[currentBlogIndex].createdAt)} - {formatDate(blogs[currentBlogIndex].updatedAt)}
                                     </p>
                                 </>
                             )}

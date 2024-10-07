@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Swal from 'sweetalert2';
-import { FaThumbsUp, FaThumbsDown, FaRegComment } from 'react-icons/fa'; 
+import { FaThumbsUp, FaThumbsDown, FaRegComment } from 'react-icons/fa';
 import UpdateBlog from './UpdateBlog';
 import { FaUserCircle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -14,6 +15,7 @@ const Blog = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [expandedStates, setExpandedStates] = useState({});
     const [showMoreButton, setShowMoreButton] = useState(false); // State for showing "Show More" button
+    const navigate = useNavigate()
 
     // Ref to track content height
     const contentRefs = useRef({});
@@ -120,6 +122,12 @@ const Blog = () => {
         checkContentHeight();
     }, [filteredBlogs, expandedStates]);
 
+
+    const handleOnclick = (blog) => {
+        console.log(blog);
+        navigate("/blog-details", { state: { blog } });
+    };
+
     return (
         <motion.div
             className="form-container"
@@ -160,7 +168,17 @@ const Blog = () => {
                                 <h2 className='text-xl font-bold my-2'>{Blog.title}</h2>
 
                                 {/* Display the blog image if available */}
-                                {Blog.image && <img src={Blog.image} alt={Blog.title} className='w-full h-96 rounded-md mb-2' />}
+                                {Blog.image && <img src={Blog.image} alt={Blog.title} className='w-full h-96 rounded-md mb-2'
+                                    onClick={() => handleOnclick(Blog)}
+                                />}
+                                {Blog.video && (
+                                    <video
+                                        src={Blog.video}
+                                        alt={Blog.title}
+                                        className="w-full h-auto md:h-full object-cover rounded-xl"
+                                        controls
+                                    />
+                                )}
 
                                 <div className='mt-2'>
                                     {/* Limit content to 4 lines with Show More option */}
@@ -169,7 +187,7 @@ const Blog = () => {
                                         className={`overflow-hidden ${isExpanded ? '' : 'line-clamp-4'}`}
                                         dangerouslySetInnerHTML={{ __html: Blog.content }}
                                     />
-                                    
+
                                     {showMoreButton[Blog._id] && ( // Show button if content exceeds 4 lines
                                         <button
                                             className='text-blue-500 mt-2'
@@ -180,10 +198,10 @@ const Blog = () => {
                                     )}
                                 </div>
                                 <div className='mt-2'>
-                                {Blog.categories.map((category) => (
-                                    <span key={category._id} className='text-blue-500 mr-2'>#{category.name}</span>
-                                ))}
-                            </div>
+                                    {Blog.categories.map((category) => (
+                                        <span key={category._id} className='text-blue-500 mr-2'>#{category.name}</span>
+                                    ))}
+                                </div>
 
                                 <div className='flex items-center mt-4'>
                                     <button className='flex items-center text-blue-500 mr-4'>

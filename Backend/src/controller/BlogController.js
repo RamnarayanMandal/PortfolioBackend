@@ -208,8 +208,8 @@ export const updatePost = async (req, res) => {
 // Add a comment to a blog post
  export const  addComment = async (req, res) => {
   try {
-    const { author, content } = req.body;
-    const comment = new Comment({ author, content });
+    const { name,email, content } = req.body;
+    const comment = new Comment({ name,email, content });
     const post = await BlogPost.findByIdAndUpdate(req.params.id, { $push: { comments: comment } }, { new: true });
     if (!post) return res.status(404).json({ message: 'Post not found' });
     res.status(201).json(comment);
