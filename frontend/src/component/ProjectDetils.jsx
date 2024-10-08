@@ -96,9 +96,9 @@ export const ProjectDetils = () => {
                 />
           {/* Project Dates */}
           <div className={`text-sm md:text-base mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            <span className="font-bold">Start Date:</span> {formatDate(project.startDate.$date)}
+            <span className="font-bold">Start Date:</span> {formatDate(project.startDate)}
             <br />
-            <span className="font-bold">End Date:</span> {formatDate(project.endDate.$date)}
+            <span className="font-bold">End Date:</span> {formatDate(project.endDate)}
           </div>
 
           {/* Role */}
@@ -109,14 +109,13 @@ export const ProjectDetils = () => {
           </div>
 
           {/* Technologies Used */}
-          <div className="mb-6">
-            <h3 className={`text-lg md:text-xl font-semibold mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>Technologies Used:</h3>
-            <ul className="list-disc pl-5 text-sm md:text-lg">
-              {project.technologiesUsed && JSON.parse(project.technologiesUsed).map((tech, index) => (
-                <li key={index} className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{tech}</li>
-              ))}
-            </ul>
-          </div>
+          <p className="mb-4">
+                  <strong>Technologies Used:</strong>
+                  {Array.isArray(project.technologiesUsed)
+                    ? project.technologiesUsed.join(', ') 
+                    : project.technologiesUsed} 
+                </p>
+
 
           {/* Links */}
           <div className="flex space-x-4">

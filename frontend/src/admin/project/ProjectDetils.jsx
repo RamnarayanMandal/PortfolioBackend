@@ -5,19 +5,19 @@ export const ProjectDetils = () => {
   const location = useLocation();
   const { project } = location.state || {};
 
-  // Carousel state for images
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // Navigate hook
   const navigate = useNavigate();
 
-  // Function to handle back navigation
   const handleBack = () => {
-    navigate(-1); // Navigate back to the previous page
+    navigate(-1);
   };
 
   if (!project) {
-    return <div className="text-center text-red-500 font-bold text-xl">Project details not available</div>;
+    return (
+      <div className="text-center text-red-500 font-bold text-xl">
+        Project details not available
+      </div>
+    );
   }
 
   const formatDate = (dateString) => {
@@ -25,7 +25,6 @@ export const ProjectDetils = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Handlers to move through carousel images
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === project.imageUrl.length - 1 ? 0 : prevIndex + 1
@@ -54,7 +53,7 @@ export const ProjectDetils = () => {
         {project.imageUrl && (
           <div className="relative">
             <img
-              className="w-full h-full  object-cover rounded-md"
+              className="w-full h-full object-cover rounded-md"
               src={project.imageUrl[currentImageIndex]}
               alt={`${project.name} - ${currentImageIndex + 1}`}
             />
@@ -78,25 +77,25 @@ export const ProjectDetils = () => {
 
         <div className="p-6">
           {/* Project Name */}
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">{project.name}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
+            {project.name}
+          </h1>
 
           {/* Project Description */}
-          <p className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg">{project.description}</p>
-          <div
-            className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg"
-            dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
-          />
-          <div
-            className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg"
-            dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
-          />
+          {project.description ? (
+            <div
+              className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg"
+              dangerouslySetInnerHTML={{ __html: project.description }}
+            />
+          ) : (
+            <p className="text-gray-700 mb-6">No description available</p>
+          )}
+
           {/* Project Dates */}
           <div className="text-gray-600 text-sm md:text-base mb-6">
             <span className="font-bold">Start Date:</span> {formatDate(project.startDate)}
             <br />
-            <span className="font-bold">End Date:</span> {formatDate(project.
-              endDate
-            )}
+            <span className="font-bold">End Date:</span> {formatDate(project.endDate)}
           </div>
 
           {/* Role */}
@@ -106,23 +105,23 @@ export const ProjectDetils = () => {
             </h2>
           </div>
 
-
           {/* Technologies Used */}
           <div className="mb-6">
-            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">Technologies Used:</h3>
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">
+              Technologies Used:
+            </h3>
             <ul className="list-disc pl-5 text-sm md:text-lg">
               {Array.isArray(project.technologiesUsed)
                 ? project.technologiesUsed.map((tech, index) => (
                   <li key={index} className="text-gray-700">{tech}</li>
                 ))
-                : project.technologiesUsed && project.technologiesUsed.split(',').map((tech, index) => (
-                  <li key={index} className="text-gray-700">{tech.trim()}</li>
-                ))
+                : project.technologiesUsed &&
+                  project.technologiesUsed.split(',').map((tech, index) => (
+                    <li key={index} className="text-gray-700">{tech.trim()}</li>
+                  ))
               }
             </ul>
           </div>
-
-
 
           {/* Links */}
           <div className="flex space-x-4">
@@ -136,7 +135,6 @@ export const ProjectDetils = () => {
                 GitHub Repository
               </a>
             )}
-
             {project.liveDemoLink && (
               <a
                 href={project.liveDemoLink}
