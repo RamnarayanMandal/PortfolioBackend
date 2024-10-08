@@ -109,9 +109,14 @@ export default function RightDrawer() {
           <PersonIcon sx={{ marginRight: '10px', color: '#2C3E50' }} /> {/* User Icon */}
           <ListItemText
             primary={
-              <Typography component="span" variant="body1" color="primary">
-                {message.name}
-              </Typography>
+              <>
+                <Typography component="span" variant="body1" color="primary">
+                  Name:{message.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Subject: {message.subject}
+                </Typography>
+              </>
             }
             secondary={
               <>
@@ -134,6 +139,7 @@ export default function RightDrawer() {
       ))}
     </MessageList>
   );
+  
 
   return (
     <div>
