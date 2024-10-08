@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme } from '../ThemeContext';
+import { useTheme } from '../../ThemeContext';
 import { useNavigate } from 'react-router-dom';
 
 const Skill = () => {

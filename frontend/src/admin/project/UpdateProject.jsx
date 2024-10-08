@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdClose } from 'react-icons/io';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-const UpdateProject = ({ showModal, project }) => {
+const UpdateProject = ({ showModal, project ,fetchProjects }) => {
   const [projectData, setProjectData] = useState({
     name: '',
     description: '',
     role: '',
     technologiesUsed: [''],
     url: '',
-    imageFiles: [], // Change to an array for multiple images
+    imageFiles: [],
     githubLink: '',
     liveDemoLink: '',
     startDate: '',
@@ -18,6 +20,8 @@ const UpdateProject = ({ showModal, project }) => {
   });
 
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (project) {
@@ -29,11 +33,11 @@ const UpdateProject = ({ showModal, project }) => {
         url: project.url,
         githubLink: project.githubLink,
         liveDemoLink: project.liveDemoLink,
-        startDate: project.startDate ? project.startDate.split('T')[0] : '', // Format date
-        endDate: project.endDate ? project.endDate.split('T')[0] : '', // Format date
+        startDate: project.startDate ? project.startDate.split('T')[0] : '',
+        endDate: project.endDate ? project.endDate.split('T')[0] : '',
         imageFiles: []
       });
-      setImagePreviews(project.imageUrl || []); // Set previews for existing images
+      setImagePreviews(project.imageUrl || []);
     }
   }, [project]);
 
@@ -59,25 +63,26 @@ const UpdateProject = ({ showModal, project }) => {
     if (files.length) {
       const newFiles = files.map(file => {
         const url = URL.createObjectURL(file);
-        setImagePreviews(prev => [...prev, url]);
         return file; // Keep the file object for upload
       });
+      setImagePreviews(prev => [...prev, ...newFiles.map(file => URL.createObjectURL(file))]);
       setProjectData((prevData) => ({
         ...prevData,
         imageFiles: [...prevData.imageFiles, ...newFiles]
       }));
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
     try {
       const url = project
         ? `${BASE_URL}/api/projects/update/${project._id}`
         : `${BASE_URL}/api/projects/create`;
       const method = project ? 'PUT' : 'POST';
-  
+
       const formData = new FormData();
       formData.append('name', projectData.name);
       formData.append('description', projectData.description);
@@ -88,40 +93,40 @@ const UpdateProject = ({ showModal, project }) => {
       formData.append('liveDemoLink', projectData.liveDemoLink);
       formData.append('startDate', projectData.startDate);
       formData.append('endDate', projectData.endDate);
-  
-      // Handle image uploads
+
       for (const file of projectData.imageFiles) {
-        // If you're using Cloudinary, you should upload the file here and get the URL.
-        // const uploadedImageUrl = await uploadToCloudinary(file); // Implement this function
-        formData.append('imageUrl', file); // Append image files directly for upload
+        formData.append('imageUrl', file);
       }
-  
+
       const response = await fetch(url, {
         method: method,
         body: formData
       });
-  
+
       if (response.ok) {
         console.log(project ? 'Project updated successfully!' : 'Project added successfully!');
         showModal(false);
+        fetchProjects();
       } else {
-        console.error('Failed to save project:', response.statusText);
+        const message = await response.text();
+        setError(`Failed to save project: ${message}`);
       }
     } catch (error) {
-      console.error('Error saving project:', error);
+      setError('Error saving project: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
-    <div className="max-w-lg mx-auto p-4 rounded-lg shadow-lg max-h-screen overflow-y-auto">
+    <div className=" mx-auto p-4 rounded-lg shadow-lg max-h-screen overflow-y-auto w-[90%]">
       <form onSubmit={handleSubmit} className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold mb-4">{project ? 'Update Project' : 'Add Project'}</h2>
           <IoMdClose onClick={() => showModal(false)} className="text-2xl cursor-pointer" />
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {error && <div className="text-red-500">{error}</div>}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="mb-4">
             <label className="block text-gray-700">Project Name</label>
             <input
@@ -133,8 +138,6 @@ const UpdateProject = ({ showModal, project }) => {
               className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
             />
           </div>
-
-          
 
           <div className="mb-4">
             <label className="block text-gray-700">Role</label>
@@ -161,18 +164,7 @@ const UpdateProject = ({ showModal, project }) => {
                 className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500 mb-2"
               />
             ))}
-            <button
-              type="button"
-              onClick={() =>
-                setProjectData((prevData) => ({
-                  ...prevData,
-                  technologiesUsed: [...prevData.technologiesUsed, '']
-                }))
-              }
-              className="bg-blue-500 text-white py-2 px-4 rounded mb-4"
-            >
-              Add Technology
-            </button>
+
           </div>
 
           <div className="mb-4">
@@ -192,19 +184,19 @@ const UpdateProject = ({ showModal, project }) => {
             <input
               type="file"
               accept="image/*"
-              multiple // Allow multiple files
+              multiple
               name="imageFiles"
               onChange={handleImageChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
             />
-            {imagePreviews.map((preview, index) => (
+            {/* {imagePreviews.map((preview, index) => (
               <img
                 key={index}
                 src={preview}
                 alt="Preview"
                 className="mt-2 w-full h-32 object-cover"
               />
-            ))}
+            ))} */}
           </div>
 
           <div className="mb-4">
@@ -252,22 +244,39 @@ const UpdateProject = ({ showModal, project }) => {
               className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
             />
           </div>
-          
+
+
         </div>
         <div className="mb-4">
-            <label className="block text-gray-700">Description</label>
-            <textarea
-              name="description"
-              value={projectData.description}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-pink-500"
-            />
-          </div>
+          <label className="block text-gray-700">Project Description</label>
+          <ReactQuill
+            value={projectData.description}
+            onChange={(value) => setProjectData((prevData) => ({ ...prevData, description: value }))}
+            className="mt-1 border border-gray-300 rounded"
+          />
+        </div>
+        <div className='flex items-center content-center gap-4'>
+          <button
+            type="button"
+            onClick={() =>
+              setProjectData((prevData) => ({
+                ...prevData,
+                technologiesUsed: [...prevData.technologiesUsed, '']
+              }))
+            }
+            className="bg-blue-500 text-white py-2 px-4 rounded "
+          >
+            Add Technology
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`bg-blue-500 text-white py-2 px-4 rounded ${loading && 'opacity-50 cursor-not-allowed'}`}
+          >
+            {loading ? 'Saving...' : project ? 'Update Project' : 'Add Project'}
+          </button>
+        </div>
 
-        <button type="submit" className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-          {project ? 'Update Project' : 'Add Project'}
-        </button>
       </form>
     </div>
   );

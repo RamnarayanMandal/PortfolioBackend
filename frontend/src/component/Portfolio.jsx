@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar } from './Navbar';
 
 import { Education } from './Eduction'; // Fixed the import typo from 'Eduction' to 'Education'
-import Skill from './Skill';
+import Skill from './skill/Skill';
 import { Project } from './Project';
 import { Footer } from './Footer';
 import { Profile } from './Profile';

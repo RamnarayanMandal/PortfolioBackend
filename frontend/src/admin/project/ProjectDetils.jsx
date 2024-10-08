@@ -82,12 +82,21 @@ export const ProjectDetils = () => {
 
           {/* Project Description */}
           <p className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg">{project.description}</p>
-
+          <div
+            className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg"
+            dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
+          />
+          <div
+            className="text-gray-700 mb-6 whitespace-pre-line text-sm md:text-lg"
+            dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
+          />
           {/* Project Dates */}
           <div className="text-gray-600 text-sm md:text-base mb-6">
-            <span className="font-bold">Start Date:</span> {formatDate(project.startDate.$date)}
+            <span className="font-bold">Start Date:</span> {formatDate(project.startDate)}
             <br />
-            <span className="font-bold">End Date:</span> {formatDate(project.endDate.$date)}
+            <span className="font-bold">End Date:</span> {formatDate(project.
+              endDate
+            )}
           </div>
 
           {/* Role */}
@@ -97,15 +106,23 @@ export const ProjectDetils = () => {
             </h2>
           </div>
 
+
           {/* Technologies Used */}
           <div className="mb-6">
             <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">Technologies Used:</h3>
             <ul className="list-disc pl-5 text-sm md:text-lg">
-              {project.technologiesUsed && JSON.parse(project.technologiesUsed).map((tech, index) => (
-                <li key={index} className="text-gray-700">{tech}</li>
-              ))}
+              {Array.isArray(project.technologiesUsed)
+                ? project.technologiesUsed.map((tech, index) => (
+                  <li key={index} className="text-gray-700">{tech}</li>
+                ))
+                : project.technologiesUsed && project.technologiesUsed.split(',').map((tech, index) => (
+                  <li key={index} className="text-gray-700">{tech.trim()}</li>
+                ))
+              }
             </ul>
           </div>
+
+
 
           {/* Links */}
           <div className="flex space-x-4">

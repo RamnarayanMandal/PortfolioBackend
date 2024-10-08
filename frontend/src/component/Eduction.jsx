@@ -64,7 +64,10 @@ export const Education = () => {
                 <p>
                   Percentage: <span className="font-semibold">{education.percentage}%</span>
                 </p>
-                {education.description && <p className="mt-4">{education.description}</p>}
+                <div
+                   className=""
+                  dangerouslySetInnerHTML={{ __html: education?.description }} // Assuming skill.description contains the rich text
+                />
               </div>
             ))
           )}

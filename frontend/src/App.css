@@ -437,7 +437,7 @@ section .title::after{
   border: 2px solid #ffffff;
   transition: all 0.5s ease;
   z-index: 1;
-  margin: 40px;
+ 
 
   &:hover {
     color: #000000; /* Text color becomes white on hover */
@@ -461,7 +461,49 @@ section .title::after{
   }
 }
 
-.certificate-skillbtn {
+.buttonDelete {
+  cursor: pointer;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  min-height: 40px;
+  font-weight: 500;
+  user-select: none;
+  color: #c02121;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 4px;
+  text-align: center;
+  text-transform: uppercase;
+  border: 2px solid #cf1d1d;
+  transition: all 0.5s ease;
+  z-index: 1;
+ 
+
+  &:hover {
+    color: #ffffff; /* Text color becomes white on hover */
+    @include colorChange(#4287f5, 10%);
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #c02424e5;
+    z-index: -10;
+    transition: width 0.5s ease;
+  }
+
+  &:hover::before {
+    width: 100%;
+  }
+}
+
+.certificate-btn {
   cursor: pointer;
   position: relative;
   font-family: 'Montserrat', sans-serif;
@@ -503,7 +545,7 @@ section .title::after{
   }
 }
 
-.certificate-skillbtn-delete {
+.certificate-btn-delete {
   cursor: pointer;
   position: relative;
   font-family: 'Montserrat', sans-serif;

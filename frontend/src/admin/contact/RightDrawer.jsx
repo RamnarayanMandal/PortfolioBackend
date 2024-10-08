@@ -110,7 +110,7 @@ export default function RightDrawer() {
           <ListItemText
             primary={
               <Typography component="span" variant="body1" color="primary">
-                {message.subject}
+                {message.name}
               </Typography>
             }
             secondary={

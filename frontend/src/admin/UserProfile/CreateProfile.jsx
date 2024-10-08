@@ -4,16 +4,18 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 import Swal from 'sweetalert2'; // Import SweetAlert2
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import styles
 
 const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
-    const { register, handleSubmit, formState: { errors }, control } = useForm({
+    const { register, handleSubmit, formState: { errors }, control, setValue } = useForm({
         defaultValues: {
             name: userProfile.name,
             email: userProfile.email,
             title: userProfile.title,
             bio: userProfile.bio,
-            socialMedia: userProfile.socialMedia || []
+            socialMedia: userProfile.socialMedia || [],
+            address: userProfile.address // Ensure address is included in default values
         }
     });
 
@@ -30,10 +32,10 @@ const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
             console.log('Response from server:', response.data);
             Swal.fire({
                 icon: 'success',
-                title: 'User update successfully!',
+                title: 'User updated successfully!',
                 showConfirmButton: false,
                 timer: 1500
-              });
+            });
             setShowModalUpdate(false);
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -41,8 +43,12 @@ const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'There was an error updating the user.',
-              });
+            });
         }
+    };
+
+    const handleBioChange = (value) => {
+        setValue('bio', value); // Set the bio value in react-hook-form
     };
 
     const ErrorMessage = ({ message }) => (
@@ -51,7 +57,7 @@ const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
 
     return (
         <motion.div
-            className="lg:w-[90%] md:w-[90%] w-[75%]  lg:pt-96 pt-60  m-5 flex justify-center items-center flex-col bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 absolute inset-16 z-50 bg-opacity-90 min-h-[300px] max-h-[800px] overflow-y-auto"
+            className="lg:w-[90%] md:w-[90%] w-[75%] lg:pt-96 pt-60 m-5 flex justify-center items-center flex-col bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 absolute inset-16 z-50 bg-opacity-90 min-h-[300px] max-h-[800px] overflow-y-auto"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -108,13 +114,25 @@ const CreateProfile = ({ userProfile, setShowModalUpdate }) => {
                     {errors.title && <ErrorMessage message={errors.title.message} />}
                 </div>
 
+                {/* Address */}
+                <div className="form-group">
+                    <label className="font-semibold mb-2 text-gray-700 block">Address:</label>
+                    <input
+                        type="text"
+                        className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your address"
+                        {...register('address', { required: 'Address is required' })}
+                    />
+                    {errors.address && <ErrorMessage message={errors.address.message} />}
+                </div>
+
                 {/* Bio */}
                 <div className="form-group">
                     <label className="font-semibold mb-2 text-gray-700 block">Bio:</label>
-                    <textarea
-                        className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                        placeholder="Tell us about yourself"
-                        {...register('bio')}
+                    <ReactQuill
+                        value={userProfile.bio} // Set initial value
+                        onChange={handleBioChange} // Update bio on change
+                        placeholder="Write something about yourself..."
                     />
                 </div>
 

@@ -11,18 +11,21 @@ const Education = () => {
   const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const fetchEducations = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/educations/getAllEdu`);
-        const data = await response.json();
-        setEdus(data);
-      } catch (error) {
-        console.error('Error fetching educations:', error);
-      }
-    };
+    
 
     fetchEducations();
   }, []);
+
+
+  const fetchEducations = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/educations/getAllEdu`);
+      const data = await response.json();
+      setEdus(data);
+    } catch (error) {
+      console.error('Error fetching educations:', error);
+    }
+  };
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -82,7 +85,11 @@ const Education = () => {
                 <h1 className="text-lg md:text-2xl text-gray-800 my-2">
                   {edu.instituteName}
                 </h1>
-                <p className="text-gray-600 mb-4">{edu.description}</p>
+                <div
+                   className="text-lg md:text-2xl text-gray-800 my-2"
+                  dangerouslySetInnerHTML={{ __html: edu?.description }} // Assuming skill.description contains the rich text
+                />
+
                 <p className="text-xl font-bold text-green-700">
                   {edu.percentage}%
                 </p>
@@ -107,7 +114,8 @@ const Education = () => {
 
       {showModel && (
         <div className="flex justify-center items-center fixed inset-0 bg-gray-900 bg-opacity-50 z-10">
-          <CreateEducation showmodel={setShowModel} selectedEdu={selectedEdu} />
+         <CreateEducation setShowModel={setShowModel} selectedEdu={selectedEdu} fetchEducations={fetchEducations} />
+
         </div>
       )}
     </div>

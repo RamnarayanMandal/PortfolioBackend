@@ -108,7 +108,7 @@ export const BlogComponent = () => {
 
                 {blogs.length > 0 && (
                     <div className="relative flex justify-center gap-4 items-center content-center px-4">
-                        <div className="flex flex-col justify-center items-start border p-4 rounded-md shadow-md overflow-hidden w-full md:w-1/2 lg:w-1/4 cursor-pointer"
+                        <div className="flex flex-col justify-center items-start border p-4 rounded-md shadow-md overflow-hidden w-full md:w-1/2 lg:w-1/4 "
                            >
                             {blogs[currentBlogIndex] && (
                                 <>
@@ -120,7 +120,7 @@ export const BlogComponent = () => {
                                         <img
                                             src={blogs[currentBlogIndex].image}
                                             alt={blogs[currentBlogIndex].title}
-                                            className='w-full h-96 rounded-md mb-2 object-cover'
+                                            className='w-full h-96 rounded-md mb-2 object-cover cursor-pointer'
                                             onClick={() => handleOnclick(blogs[currentBlogIndex])} />
                                     )}
                                     {blogs[currentBlogIndex].video && (
@@ -130,7 +130,7 @@ export const BlogComponent = () => {
                                             controls
                                             autoPlay
                                             muted
-                                            className='w-full h-96 rounded-md mb-2 object-cover'
+                                            className='w-full h-96 rounded-md mb-2 object-cover cursor-pointer'
                                             onClick={() => handleOnclick(blogs[currentBlogIndex])} />
                                             
                                     )}

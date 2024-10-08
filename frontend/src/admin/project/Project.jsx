@@ -16,20 +16,22 @@ export const Project = () => {
   const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/projects/getAll`);
-        setProjects(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    
 
     fetchProjects();
   }, []);
 
+
+  const fetchProjects = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/projects/getAll`);
+      setProjects(response.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   
 
   const handleUpdateProject = (project) => {
@@ -79,16 +81,19 @@ export const Project = () => {
                 <img
                   src={project?.imageUrl[0] || 'https://via.placeholder.com/500'}
                   alt={project.name}
-                 className='lg:w-52 lg:h-52 md:w-32 md:h-32 w-40 h-40 rounded-full object-cover border-4 border-red-600 hover:border-white'
+                 className='lg:w-52 lg:h-52 md:w-32 md:h-32 w-40 h-40 rounded-full object-cover border-4 border-red-600 hover:border-white cursor-pointer'
                 />
               </div>
     
               {/* Project Info */}
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2 text-center">{project.name}</h3>
-                <p className="text-gray-200 mb-4 line-clamp-4 text-justify">
-                  {project.description}
-                </p>
+                
+
+                <div
+                  className="text-gray-200 mb-4 line-clamp-4 text-justify"
+                  dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
+                />
     
                 <p className="text-gray-300 mb-2"><strong>Role:</strong> {project.role}</p>
                 <p className="text-gray-200 mb-4"><strong>Technologies Used:</strong> {project.technologiesUsed.join(', ')}</p>
@@ -128,6 +133,7 @@ export const Project = () => {
             <UpdateProject
               showModal={setShowModal}
               project={selectedProject} // Pass the selected project (or null) to the modal
+              fetchProjects={fetchProjects}
             />
           </div>
         )}

@@ -62,7 +62,7 @@ export const ProjectDetils = () => {
         {project.imageUrl && (
           <div className="relative">
             <img
-              className="w-full h-full object-cover rounded-md lg:fixed  left-0 "
+              className="w-full h-full object-cover rounded-md  "
               src={project.imageUrl[currentImageIndex]}
               alt={`${project.name} - ${currentImageIndex + 1}`}
             />
@@ -89,8 +89,11 @@ export const ProjectDetils = () => {
           <h1 className={`text-3xl md:text-5xl font-bold mb-4 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>{project.name}</h1>
 
           {/* Project Description */}
-          <p className={`mb-6 whitespace-pre-line text-sm md:text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{project.description}</p>
-
+      
+          <div
+                  className={`mb-6 whitespace-pre-line text-sm md:text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                  dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
+                />
           {/* Project Dates */}
           <div className={`text-sm md:text-base mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             <span className="font-bold">Start Date:</span> {formatDate(project.startDate.$date)}

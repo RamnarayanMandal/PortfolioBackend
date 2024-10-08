@@ -17,9 +17,10 @@ import { ExperienceHomePage } from './admin/experience/ExperienceHomePage';
 import { ThemeProvider } from './ThemeContext';
 import Certificate from './admin/Certificate/Certificate';
 import Blog from './admin/Blog/Blog';
-import {BlogDetails} from './admin/Blog/BlogDetails';
+import { BlogDetails } from './admin/Blog/BlogDetails';
 import { BlogDetailsPage } from './component/BlogDetailsPage';
 import ShowParticularSkill from './component/skill/ShowParticularSkill';
+import { GetParticlurSkill } from './admin/skill/GetParticlurSkill';
 
 const App = () => {
   return (
@@ -35,13 +36,15 @@ const MainContent = () => {
 
   // Condition to determine when to show the sidebar
   const showSideBar = !(
-    location.pathname === '/' || 
-    location.pathname === '/about-project' || 
-    location.pathname === '/login-ramnarayanMandal'||
+    location.pathname === '/' ||
+    location.pathname === '/about-project' ||
+    location.pathname === '/login-ramnarayanMandal' ||
     location.pathname === "/blogDetails" ||
     location.pathname === "/View-skill"
 
   );
+
+  const token = localStorage.getItem('token');
 
   // Function to set background style based on the route
   const getBackgroundStyle = () => {
@@ -55,8 +58,10 @@ const MainContent = () => {
       case '/education':
       case '/blog':
       case '/blogDetails':
-      case 'blog-details': 
-      case '/View-skill': 
+      case 'blog-details':
+      case '/View-skill':
+      case '/admin-View-skill':
+          
 
         return {
           backgroundImage: 'url("https://img.freepik.com/free-photo/blue-toned-collection-paper-sheets-with-copy-space_23-2148320445.jpg?w=900&t=st=1709066598~exp=1709067198~hmac=c5c0995a7289d90e1e59f33310d419716d3975cedc8f97a8f31c119f7619dcaf")',
@@ -88,25 +93,29 @@ const MainContent = () => {
       <Routes>
         <Route path="/" element={<PortfolioWithThemeProvider />} />
         <Route path="/login-ramnarayanMandal" element={<UserRegistration />} />
-        {/* Admin routes */}
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/skill" element={<Skill />} />
-        <Route path="/updateSkill/:id" element={<UpdateSkill />} />
-        <Route path="/update-Bio" element={<CreateProfile />} />
-        <Route path="/education" element={<Education />} />
-        <Route path="/createEducation" element={<CreateEducation />} />
-        <Route path="/adminUpdateSkill/:id" element={<UpdateSkill />} />
-        <Route path="/projects" element={<Project />} />
-        <Route path="/Project-Details" element={<ProjectDetils />} />
         <Route path="/about-project" element={<PortfolioWithThemeProviderAndProjectDetails />} />
-        <Route path="/experience" element={<ExperienceHomePage />} />
-        <Route path="/certificate" element={<Certificate />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog-details" element={<BlogDetails />} />
         <Route path="/blogDetails" element={<PortfolioWithThemeProviderAndBlogDetails />} />
         <Route path="/View-skill" element={<PortfolioWithThemeProviderAndviewSkill />} />
-
-
+        {/* Admin routes */}
+        {
+          token && (
+            <>
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/skill" element={<Skill />} />
+              <Route path="/adminUpdateSkill/:id" element={<UpdateSkill />} />
+              <Route path="/projects" element={<Project />} />
+              <Route path="/update-Bio" element={<CreateProfile />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/createEducation" element={<CreateEducation />} />
+              <Route path="/Project-Details" element={<ProjectDetils />} />
+              <Route path="/experience" element={<ExperienceHomePage />} />
+              <Route path="/certificate" element={<Certificate />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog-details" element={<BlogDetails />} />
+              <Route path="/admin-View-skill" element={<GetParticlurSkill />} />
+            </>
+          )
+        }
 
       </Routes>
     </div>
@@ -135,7 +144,7 @@ const PortfolioWithThemeProviderAndProjectDetails = () => {
 const PortfolioWithThemeProviderAndBlogDetails = () => {
   return (
     <ThemeProvider>
-      <BlogDetailsPage/>
+      <BlogDetailsPage />
     </ThemeProvider>
   );
 };
@@ -144,7 +153,7 @@ const PortfolioWithThemeProviderAndBlogDetails = () => {
 const PortfolioWithThemeProviderAndviewSkill = () => {
   return (
     <ThemeProvider>
-      <ShowParticularSkill/>
+      <ShowParticularSkill />
     </ThemeProvider>
   );
 };

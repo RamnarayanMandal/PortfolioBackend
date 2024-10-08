@@ -21,9 +21,7 @@ export const createSkill = async (req, res) => {
       logoLocalPath = req.files.logo[0].path;
     }
 
-    if (!logoLocalPath) {
-      return res.status(400).send("Logo file is required");
-    }
+    
 
     const Newlogo = await uploadOnCloudinary(logoLocalPath);
 
@@ -75,11 +73,43 @@ export const getSkillById = async (req, res) => {
 
 export const updateSkill = async (req, res) => {
   try {
-    const skill = await Skill.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { name, yearsExperience, description, rating, projectUrl } = req.body;
+
+    // Parse projectUrl if it's a string (coming from the client as JSON)
+    let parsedProjectUrl = [];
+    if (projectUrl) {
+      parsedProjectUrl = JSON.parse(projectUrl); // Parse the string into an array of objects
+    }
+
+    // Find the existing skill
+    const skill = await Skill.findById(req.params.id);
     if (!skill) {
       return res.status(404).json({ message: 'Skill not found' });
     }
-    res.json(skill);
+
+    // Update logo if a new one is provided
+    let newLogoUrl = skill.logo; // Keep the old logo URL if no new logo is provided
+    if (req.files && req.files.logo && req.files.logo.length > 0) {
+      const logoLocalPath = req.files.logo[0].path;
+      const Newlogo = await uploadOnCloudinary(logoLocalPath);
+      newLogoUrl = Newlogo.url; // Update with the new logo URL
+    }
+
+    // Update the skill with new values
+    skill.name = name || skill.name;
+    skill.yearsExperience = yearsExperience || skill.yearsExperience;
+    skill.description = description || skill.description;
+    skill.rating = rating || skill.rating;
+    skill.logo = newLogoUrl; // Set updated logo or retain old one
+    skill.projectUrl = parsedProjectUrl.length > 0 ? parsedProjectUrl : skill.projectUrl; // Update project URLs if provided
+
+    // Save the updated skill
+    await skill.save();
+
+    res.json({
+      message: 'Skill updated successfully!',
+      skill
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

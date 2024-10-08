@@ -100,9 +100,11 @@ export const CertificateComponent = () => {
               <h1 className="text-lg md:text-2xl my-2">
                 {certificateRecords[currentImageIndex].organization}
               </h1>
-              <p className={`mb-4 text-justify ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {certificateRecords[currentImageIndex].description}
-              </p>
+              
+              <div
+                className={`mb-4 text-justify ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                dangerouslySetInnerHTML={{ __html: certificateRecords[currentImageIndex].description }} // Assuming skill.description contains the rich text
+              />
               <p className={`text-sm ml-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 {formatDate(certificateRecords[currentImageIndex].session.start)} - {formatDate(certificateRecords[currentImageIndex].session.end)}
               </p>

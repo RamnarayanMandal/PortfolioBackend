@@ -168,14 +168,14 @@ const Blog = () => {
                                 <h2 className='text-xl font-bold my-2'>{Blog.title}</h2>
 
                                 {/* Display the blog image if available */}
-                                {Blog.image && <img src={Blog.image} alt={Blog.title} className='w-full h-96 rounded-md mb-2'
+                                {Blog.image && <img src={Blog.image} alt={Blog.title} className='w-full h-96 rounded-md mb-2 cursor-pointer'
                                     onClick={() => handleOnclick(Blog)}
                                 />}
                                 {Blog.video && (
                                     <video
                                         src={Blog.video}
                                         alt={Blog.title}
-                                        className="w-full h-auto md:h-full object-cover rounded-xl"
+                                        className="w-full h-auto md:h-full object-cover rounded-xl cursor-pointer"
                                         controls
                                     />
                                 )}

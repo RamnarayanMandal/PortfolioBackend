@@ -108,7 +108,11 @@ const Certificate = () => {
                                     <h1 className="text-lg md:text-2xl text-gray-800 my-2">
                                         {certificate.organization}
                                     </h1>
-                                    <p className="text-gray-600 mb-4">{certificate.description}</p>
+                                   
+                                    <div
+                                        className="text-gray-700 mb-4"
+                                        dangerouslySetInnerHTML={{ __html:certificate.description }} // Assuming skill.description contains the rich text
+                                    />
                                     <p className="text-gray-600 text-sm ml-2">
                                         {formatDate(certificate.session.start)} - {formatDate(certificate.session.end)}
                                     </p>

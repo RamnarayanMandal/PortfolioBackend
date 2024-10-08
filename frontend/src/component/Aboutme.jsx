@@ -34,9 +34,12 @@ export const Aboutme = () => {
     >
     <section id="about" className={`py-12 max-w-7xl mx-auto lg:px-0 md:px-0 px-5 ${isDarkMode ? 'bg-gray-900 text-white' : ''}`}>
       <h2 className="text-3xl font-bold mb-6">About Me</h2>
-      <p className="text-lg mb-6">
-        {userProfile?.bio}
-      </p>
+     
+      <div
+                  className={`text-lg mb-6  `}
+                  dangerouslySetInnerHTML={{ __html: userProfile?.bio }} // Assuming skill.description contains the rich text
+                />
+
       <div className="flex space-x-4">
         {/* Display resume link if it exists */}
         {resumeLink && (

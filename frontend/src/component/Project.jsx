@@ -67,19 +67,23 @@ export const Project = () => {
           <div 
             key={project._id} 
             className={`rounded-lg shadow-lg overflow-hidden relative group transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`} // Adjust card color
-            onClick={() => handleOnClick(project)}
+           
           >
             {/* Image */}
             <img 
               src={project.imageUrl[0] || 'https://via.placeholder.com/500'} 
               alt={project.name} 
-              className="w-full h-48 object-cover rounded-t-lg" 
-            />
+              className="w-full h-48 object-cover rounded-t-lg cursor-pointer" 
+              onClick={() => handleOnClick(project)}/>
 
             {/* Project Info */}
             <div className="p-6">
               <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-              <p className={`mb-4 line-clamp-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{project.description}</p>
+              <div
+                  className={`mb-4 line-clamp-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                  dangerouslySetInnerHTML={{ __html: project?.description }} // Assuming skill.description contains the rich text
+                />
+          
               <p className="mb-2"><strong>Role:</strong> {project.role}</p>
               <p className="mb-4"><strong>Technologies Used:</strong> {JSON.parse(project.technologiesUsed[0]).join(', ')}</p>
             </div>
